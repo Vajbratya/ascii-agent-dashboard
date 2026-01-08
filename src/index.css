@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* ASCII Agent UI Theme */
+
+:root {
+  /* Core Colors */
+  --ascii-bg: #0a0a0a;
+  --ascii-bg-secondary: #111111;
+  --ascii-border: #333333;
+  --ascii-text: #e0e0e0;
+  --ascii-text-dim: #666666;
+
+  /* Status Colors */
+  --ascii-success: #22c55e;
+  --ascii-warning: #f59e0b;
+  --ascii-error: #ef4444;
+  --ascii-info: #06b6d4;
+  --ascii-accent: #a855f7;
+
+  /* Glow Effects */
+  --glow-green: 0 0 10px rgba(34, 197, 94, 0.5);
+  --glow-cyan: 0 0 10px rgba(6, 182, 212, 0.5);
+  --glow-red: 0 0 10px rgba(239, 68, 68, 0.5);
+  --glow-amber: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "JetBrains Mono", monospace;
+  background-color: var(--ascii-bg);
+  color: var(--ascii-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ascii-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ascii-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ascii-text-dim);
+}
+
+/* Blinking Cursor Animation */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink {
+  animation: blink 1s infinite;
+}
+
+/* Typewriter Animation */
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Scanline Effect */
+.scanlines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* CRT Screen Effect */
+.crt-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.2) 90%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Pulse Animation for Status Indicators */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    content: "◐";
+  }
+  25% {
+    content: "◓";
+  }
+  50% {
+    content: "◑";
+  }
+  75% {
+    content: "◒";
+  }
+  100% {
+    content: "◐";
+  }
+}
+
+.spinner::before {
+  animation: spin 0.5s linear infinite;
+}
+
+/* ASCII Box Drawing Classes */
+.ascii-box {
+  border: 1px solid var(--ascii-border);
+  background: var(--ascii-bg-secondary);
+}
+
+.ascii-box-highlight {
+  border-color: var(--ascii-info);
+  box-shadow: var(--glow-cyan);
+}
+
+/* Text Glow Classes */
+.text-glow-green {
+  text-shadow: var(--glow-green);
+}
+
+.text-glow-cyan {
+  text-shadow: var(--glow-cyan);
+}
+
+.text-glow-red {
+  text-shadow: var(--glow-red);
+}
+
+.text-glow-amber {
+  text-shadow: var(--glow-amber);
+}
