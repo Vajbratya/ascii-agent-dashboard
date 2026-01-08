@@ -1,219 +1,101 @@
-# Task: ASCII-Themed Agentic AI Messaging & Status Visualization System
+# Task: Deploy Real-Time Agent Visualization Dashboard
 
-## Overview
+## CRITICAL REQUIREMENTS
 
-Create a beautiful retro ASCII/2D themed UI for visualizing agentic AI systems, messaging between agents, and status displays. Think terminal aesthetics meets modern web.
+### 1. Real-Time WebSocket Server
 
-## Core Features
+Create a backend that:
 
-### 1. Agent Visualization Panel
+- Accepts WebSocket connections from agents (ralph, codex, claude)
+- Broadcasts status updates to all connected dashboard clients
+- Stores recent activity in memory for new connections
 
-- ASCII art representations of different AI agents
-- Status indicators (idle, thinking, working, error)
-- Agent "avatars" using ASCII art
-- Connection lines between agents (ASCII pipes: ─│┌┐└┘├┤┬┴┼)
+### 2. Agent Integration
 
-### 2. Message Stream Display
+The agents will POST updates to the server:
 
-- Real-time message flow between agents
-- Typewriter effect for messages
-- Different colors/styles for:
-  - User messages
-  - Agent responses
-  - System messages
-  - Tool calls
-  - Errors
-
-### 3. Status Dashboard
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  AGENT STATUS BOARD                          [LIVE]    │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐         │
-│  │ PLANNER  │───▶│IMPLEMENTER│───▶│ REVIEWER │         │
-│  │  ◉ IDLE  │    │ ◐ WORKING │    │  ○ WAIT  │         │
-│  └──────────┘    └──────────┘    └──────────┘         │
-│                                                         │
-│  Messages: 42  │  Tokens: 15.2k  │  Cost: $0.45       │
-└─────────────────────────────────────────────────────────┘
+```json
+{
+  "agent": "planner|implementer|reviewer",
+  "status": "idle|thinking|working|error|done",
+  "message": "What the agent is doing",
+  "timestamp": "ISO timestamp",
+  "tokens": 1234,
+  "cost": 0.05
+}
 ```
 
-### 4. Interactive Terminal
+### 3. Dashboard Features
 
-- Command input with autocomplete
-- History navigation
-- Syntax highlighting for code blocks
-- Copy/paste support
+- Real-time agent status cards (animated)
+- Live message stream with typewriter effect
+- Token/cost counters updating live
+- Task progress visualization
+- Connection status indicator
+- Mobile responsive
 
-### 5. Log Viewer
+### 4. Deploy to Vercel
 
-- Scrollable log with filters
-- Log levels: DEBUG, INFO, WARN, ERROR
-- Timestamp display
-- Search functionality
+- Configure for serverless WebSocket (or use Vercel KV for pub/sub)
+- Or use alternative: Railway, Render, or Fly.io for WebSocket support
+- Public URL that anyone can access
 
-## Technical Stack
+## Tech Stack
 
-- **React** + **TypeScript**
-- **Tailwind CSS** for styling
-- **Monospace fonts** (JetBrains Mono, Fira Code)
-- **CSS animations** for effects
-- No heavy dependencies - keep it lightweight
-
-## Visual Style Guide
-
-- Dark background (#0a0a0a or similar)
-- Green text for success (#22c55e)
-- Amber/yellow for warnings (#f59e0b)
-- Red for errors (#ef4444)
-- Cyan for highlights (#06b6d4)
-- White/gray for normal text
-- Box-drawing characters for borders
-- Blinking cursor effect
-- Scanline overlay (optional)
-- CRT screen curve effect (optional)
-
-## Components to Build
-
-### AgentCard
-
-```tsx
-<AgentCard name="Planner" status="working" avatar={ASCII_ROBOT} messages={3} />
-```
-
-### MessageStream
-
-```tsx
-<MessageStream messages={messages} typewriterSpeed={30} />
-```
-
-### StatusBar
-
-```tsx
-<StatusBar
-  agents={agents}
-  stats={{ tokens: 15200, cost: 0.45, messages: 42 }}
-/>
-```
-
-### Terminal
-
-```tsx
-<Terminal onCommand={handleCommand} history={commandHistory} />
-```
-
-### LogViewer
-
-```tsx
-<LogViewer logs={logs} filter={["INFO", "ERROR"]} />
-```
-
-## ASCII Art Assets Needed
-
-- Robot/AI agent avatars (multiple styles)
-- Status icons (spinner, checkmark, X, warning)
-- Loading animations
-- Decorative borders and dividers
-- Logo/header art
+- **Frontend**: React + Vite + Tailwind (already built)
+- **Backend**: Node.js with WebSocket (ws) or Socket.io
+- **Deploy**: Vercel/Railway/Render
+- **Real-time**: WebSocket or Server-Sent Events (SSE)
 
 ## File Structure
 
 ```
-src/
-├── components/
-│   ├── AgentCard.tsx
-│   ├── MessageStream.tsx
-│   ├── StatusBar.tsx
-│   ├── Terminal.tsx
-│   ├── LogViewer.tsx
-│   └── AsciiArt.tsx
-├── hooks/
-│   ├── useTypewriter.ts
-│   └── useTerminal.ts
-├── styles/
-│   └── ascii-theme.css
-├── utils/
-│   └── ascii-helpers.ts
-├── App.tsx
-└── main.tsx
+/
+├── src/                    # React frontend (existing)
+├── server/
+│   ├── index.ts           # Express + WebSocket server
+│   ├── types.ts           # Shared types
+│   └── store.ts           # In-memory state
+├── vercel.json            # Deployment config
+└── package.json           # Updated with server deps
 ```
+
+## API Endpoints
+
+### POST /api/agent-update
+
+Agents call this to report status:
+
+```bash
+curl -X POST https://your-app.vercel.app/api/agent-update \
+  -H "Content-Type: application/json" \
+  -d '{"agent":"planner","status":"working","message":"Analyzing task..."}'
+```
+
+### GET /api/events (SSE)
+
+Dashboard connects here for real-time updates
+
+### GET /api/status
+
+Returns current state of all agents
 
 ## Success Criteria
 
-- [x] All components render correctly
-- [x] Typewriter effect works smoothly
-- [x] Status updates animate properly
-- [x] Terminal accepts input
-- [x] Responsive layout
-- [x] Beautiful ASCII aesthetic achieved
-- [x] No console errors
-- [x] npm run dev works
+- [ ] Dashboard shows real agent activity
+- [ ] Updates appear within 1 second
+- [ ] Deployed to public URL
+- [ ] Works on mobile
+- [ ] Agents can easily POST updates
 
----
+## Helper Script for Agents
 
-## Implementation Progress
-
-### Completed (Iteration 1)
-
-1. **Project Setup**
-   - Created Vite React TypeScript project
-   - Installed and configured Tailwind CSS with @tailwindcss/vite plugin
-   - Set up JetBrains Mono font for monospace aesthetic
-   - Created comprehensive CSS theme with ASCII styling, animations, and effects
-
-2. **Types & Utilities**
-   - Created TypeScript types for Agent, Message, LogEntry, Stats
-   - Built ascii-helpers.ts with box drawing characters, status icons, avatars, and helper functions
-
-3. **Hooks**
-   - `useTypewriter.ts` - Typewriter effect hook with queue support
-   - `useTerminal.ts` - Terminal state management with history navigation
-
-4. **Components**
-   - `AsciiArt.tsx` - ASCII art display, Spinner, BlinkingCursor, StatusIndicator, AsciiBox, TypewriterText
-   - `AgentCard.tsx` - Agent card display with status, avatar, AgentGrid, AgentFlow
-   - `MessageStream.tsx` - Real-time message display with typewriter effect
-   - `StatusBar.tsx` - Status bar, CompactStatusBar, StatusDashboard
-   - `Terminal.tsx` - Interactive terminal with command history
-   - `LogViewer.tsx` - Log viewer with filtering and search
-
-5. **Main App**
-   - Full demo application showcasing all components
-   - Agent simulation with status cycling
-   - Terminal commands (help, status, start, clear, logs, stats)
-   - Responsive grid layout
-
-### How to Run
+Create a bash function agents can use:
 
 ```bash
-npm install
-npm run dev
+report_status() {
+  curl -s -X POST "$DASHBOARD_URL/api/agent-update" \
+    -H "Content-Type: application/json" \
+    -d "{\"agent\":\"$1\",\"status\":\"$2\",\"message\":\"$3\"}"
+}
 ```
-
-Then open http://localhost:5173/ in your browser.
-
-Type `start` in the terminal to begin the agent simulation demo.
-
-## Inspiration
-
-- Old-school terminal UIs
-- htop/btop system monitors
-- Midnight Commander
-- Norton Commander
-- DOS games aesthetics
-- Matrix-style effects
-
----
-
-## Project Status: ✅ COMPLETE
-
-All features have been implemented and verified:
-
-- **Build**: ✅ Production build succeeds (333ms, 214KB JS, 21KB CSS)
-- **Dev Server**: ✅ Starts in ~100ms
-- **TypeScript**: ✅ No errors
-- **Components**: ✅ All 6 component files working
-- **Demo**: ✅ Full interactive demo with agent simulation
-- **Git**: ✅ Initial commit (62242e1)
