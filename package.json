@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:server": "node server.js",
+    "dev:server": "node server.cjs",
     "build": "tsc -b && vite build",
-    "start": "node server.js",
+    "start": "node server.cjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
